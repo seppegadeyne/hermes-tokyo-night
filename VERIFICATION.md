@@ -2,46 +2,57 @@
 
 ## Tested environment
 
-Linux; Node 25.2.1; Hermes checkout at `7950876f0ba3` (a local patch-stack
-checkout). SDK export availability was also checked at the pinned upstream
-reference `8863b36fd663c50d3b794c48a6505ff6c7c3c91b`. Tests did not alter core
-source, publish a repository, install into a real profile, or restart a gateway.
+Linux/native Wayland; Node 22.23.2; real Electron and Python backend from
+unmodified upstream `8863b36fd663c50d3b794c48a6505ff6c7c3c91b`.
+The runtime plugin tested is package revision
+`5175b32c4b900144fb4ff3da73eeb6b5567a59c1`; subsequent documentation-only changes
+do not alter that code. Acceptance tests used isolated homes and userdata.
 
-## Executed results
+## Unit and native integration results
 
-- `python3 -m unittest discover -s tests -v`: **5 passed**. Idempotence,
-  unchanged configuration, collision refusal + byte-exact backup restoration,
-  user-edit refusal, separate homes, symlink refusal.
-- `node --test tests/*.test.mjs`: **2 passed**. Plain ESM evaluation, native
-  contribution shape, no automatic selection on registration/reload, explicit
-  dark apply, and no later rerender reset. The SDK/React in these unit tests is a
-  deliberately labeled harness, not a live renderer.
-- `hermes plugins validate <package>`: **Validation passed**, including isolated
-  Python registration/capability probe, security scan **safe**, and desktop
-  **stays inside the plugin SDK surface**.
-- `tests/hermes-integration.py` with Hermes' own `.venv/bin/python`: **passed in
-  two isolated temporary homes**. Real standard `plugins install file://…
-  --enable --no-deps`; discovery and CLI dispatch to `tokyo-night install`;
-  actual native `load_skin` / `list_skins`; safe config selection; user changes
-  to `default` survive reinstall; skin uninstall and standard plugin remove
-  verified by filesystem reads.
-- `tests/desktop-integration.mjs` with the checkout's `tsx` loader: **passed**.
-  Real Electron-side `materializeDesktopHalf`, source/target byte comparison,
-  package marker, idempotence, real `isValidTheme`, and
-  `reconcileUnifiedDesktopHalves` cleanup after package removal.
+- Python unittest suite: **5 passed**. Idempotence, unchanged configuration,
+  collision refusal, byte-exact backup restoration, user-edit refusal, separate
+  homes, and symlink refusal.
+- Node unit suite: **2 passed**. These use an explicitly labeled SDK/React harness,
+  not a renderer, to check contribution shape and explicit-only selection.
+- `hermes plugins validate`: passed, security scan safe, desktop entry stays
+  inside the supported SDK surface.
+- Actual standard CLI installation, discovery, registered command, native skin
+  loading, selection, later-choice retention and removal: passed in two temporary
+  homes, including an unpatched upstream checkout.
+- Actual Electron-side unified-package materialization, byte comparison, package
+  marker, idempotence, real theme validation and uninstall reconciliation: passed.
 
-## Not claimed
+## Real rendered Desktop acceptance — passed
 
-No screenshot or rendered Electron acceptance test was performed. The browser
-blob-import runtime loader and a mounted `ThemeProvider` were not exercised by
-this package's tests. Materialization and native ESM evaluation are distinct
-from browser loading. The exact current-window rendering, titlebar button,
-light synthesis, and profile-persistence UX should receive a live acceptance
-check during the separately authorized installation. Existing core Tokyo Night
-presets can mask same-name plugin palette resolution until that patch is removed.
+An isolated production renderer build was served locally to native-Wayland
+Electron with dev CDP enabled, backed by the real Python service. No mocked
+backend, direct theme-store calls or localStorage writes were used.
 
-No test was run against a released minimum version or a completely unpatched
-upstream checkout. No visual pixel-perfect claim is made; the host derives
-additional UI tokens and may enforce contrast. The old remote font request is
-intentionally omitted. Fresh-profile/global default overrides are explicitly
-not reproduced: use the one-time Tokyo Night · Dark action for each profile.
+1. Chromium's debugger confirmed the actual plugin module was blob-loaded through
+   Hermes' runtime loader and SDK bridges.
+2. Enabling the plugin through Capabilities → Plugins mounted the titlebar button
+   without changing the current theme.
+3. Clicking **Tokyo Night · Dark** selected `tokyo-night` and `dark`. Computed CSS
+   showed primary `#7aa2f7`, accent `#2ac3de`, and the expected navy background seed.
+4. A full renderer reload retained the theme, dark mode and button.
+5. A subsequent explicit **Light** choice survived plugin disable/re-enable,
+   the actual **Reload desktop plugins** command, and another renderer reload.
+6. A trusted CDP pointer click on the rendered titlebar button changed Light back
+   to Dark and persisted the choice through Hermes' normal storage.
+
+The host mixes palette seeds into its surfaces; the computed body background is
+not claimed to equal the raw background seed. Screenshots/aesthetic approval and
+cross-platform visual parity were not assessed.
+
+## Limits
+
+No released minimum version has been established. Native Wayland/Linux is the
+only rendered platform tested. Tests did not modify core source or restart a
+user's live gateway/Desktop. An initial dev-server attempt stalled during large
+dependency transforms and selected Python without dotenv; the successful run
+used the supported Python override, Node 22 and a production renderer build.
+
+Fresh-profile/global default overrides are intentionally not reproduced: use
+the explicit Tokyo Night · Dark action for each profile. No automatic theme or
+mode selection occurs on load, reload or profile switch.
