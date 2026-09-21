@@ -33,10 +33,16 @@ hermes tokyo-night install
 hermes config set display.skin tokyo-night
 ```
 
-Run the first command from this repository root. After publication, the standard
-remote equivalent is `hermes plugins install OWNER/REPOSITORY --enable --no-deps`.
-Replace `OWNER/REPOSITORY` with the actual published repository; for reproducibility
-add `--ref FULL_40_CHARACTER_COMMIT_SHA`. No pip or npm dependencies are needed.
+Install from the public repository:
+
+```sh
+hermes plugins install seppegadeyne/hermes-tokyo-night --enable --no-deps
+hermes tokyo-night install
+hermes config set display.skin tokyo-night
+```
+
+For reproducibility add `--ref FULL_40_CHARACTER_COMMIT_SHA` to the plugin
+installation command. No pip or npm dependencies are needed.
 
 If you already have a personal `tokyo-night.yaml`, installation refuses to clobber
 it. To explicitly back it up and replace it:
