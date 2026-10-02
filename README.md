@@ -113,8 +113,9 @@ python3 installer.py uninstall --home /path/to/hermes-home
 
 The desktop color tokens preserve the custom Tokyo Night preset exactly. The
 native YAML preserves the existing custom CLI colors, adds an explicit navy
-background and semantic text/tool/syntax colors, and deliberately leaves out
-personal branding, banners and spinner text. The desktop font stack prefers a
+background, semantic text/tool/syntax colors, and the Tokyo Night banner
+logo/hero art (identical to the original hand-made skin). Personal branding
+and spinner text are still deliberately left out. The desktop font stack prefers a
 locally installed JetBrains Mono; unlike the former preset it does not download
 Google Fonts. Install that font locally for matching typography.
 

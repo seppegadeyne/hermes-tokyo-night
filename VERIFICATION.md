@@ -10,9 +10,11 @@ do not alter that code. Acceptance tests used isolated homes and userdata.
 
 ## Unit and native integration results
 
-- Python unittest suite: **5 passed**. Idempotence, unchanged configuration,
-  collision refusal, byte-exact backup restoration, user-edit refusal, separate
-  homes, and symlink refusal.
+- Python unittest suite: **8 passed**. Installer behaviour: idempotence,
+  unchanged configuration, collision refusal, byte-exact backup restoration,
+  user-edit refusal, separate homes, and symlink refusal. Skin-asset guards:
+  shipped banner_logo/banner_hero art, `#rrggbb` palette shape, and absence of
+  personal branding/spinner sections.
 - Node unit suite: **2 passed**. These use an explicitly labeled SDK/React harness,
   not a renderer, to check contribution shape and explicit-only selection.
 - `hermes plugins validate`: passed, security scan safe, desktop entry stays
