@@ -1,5 +1,20 @@
 # Tokyo Night for Hermes
 
+> **Archived.** This package is superseded by
+> [hermes-themes-pack](https://github.com/seppegadeyne/hermes-themes-pack), which ships
+> Tokyo Night plus every other Omarchy theme as Hermes skins and adds a `/theme`
+> command (and optional Omarchy follow). Migrate with:
+>
+> ```sh
+> hermes config set display.skin default
+> hermes tokyo-night uninstall
+> hermes plugins remove hermes-tokyo-night
+> hermes plugins install seppegadeyne/hermes-themes-pack --no-deps
+> hermes plugins enable hermes-themes-pack
+> ```
+>
+> Then run `/theme tokyo-night` in any session.
+
 A native **skin + desktop theme plugin**, with deep navy, lavender, cyan and rose
 colors. No core patches, monkeypatches, background hooks, network calls or remote
 fonts. MIT licensed. This repository is an independent community package, not an
